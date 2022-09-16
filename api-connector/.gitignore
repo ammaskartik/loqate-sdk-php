@@ -1,0 +1,6 @@
+# composer
+/vendor
+
+# ide
+.idea/
+
