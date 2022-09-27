@@ -47,7 +47,7 @@ class Capture
                 foreach ($items as $item) {
                     if ($item['Type'] === 'Container') {
                         $params['Container'] = $item['Id'];
-                        $containerResponse = json_decode($this->httpClient->get($endpoint, $params), true);
+                        $containerResponse = $this->httpClient->get($endpoint, $params);
                         if (isset($containerResponse['Items']) && $containerItems = $containerResponse['Items']) {
                             $result = array_merge($result, $containerItems);
                         }
