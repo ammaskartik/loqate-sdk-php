@@ -43,11 +43,7 @@ class Verify
             $response = $this->httpClient->post($endpoint, $params);
 
             if (is_array($response)) {
-                foreach ($response as $address) {
-                    if (isset($address['Matches'])) {
-                        return $address['Matches'];
-                    }
-                }
+                return array_column($response, 'Matches');
             }
         } catch (Throwable $exception) {
             return ['error' => true, 'message' => $exception->getMessage()];
