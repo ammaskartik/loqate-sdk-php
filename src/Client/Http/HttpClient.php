@@ -3,39 +3,29 @@
 namespace Loqate\ApiConnector\Client\Http;
 
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * HttpClient class
  */
 class HttpClient
 {
-    /** @var Client $httpClient */
-    private $httpClient;
-
-    /**
-     * HttpClient constructor
-     *
-     */
-    public function __construct()
-    {
-        $this->httpClient = new Client();
-    }
-
     /**
      * Do GET request
      *
-     * @throws GuzzleException
      * @throws Exception
      */
     public function get(string $endpoint, array $params)
     {
         $queryString = http_build_query($params);
         $endpoint .= '?' . $queryString;
-        $rawResponse = $this->httpClient->request('GET', $endpoint);
 
-        $response = json_decode($rawResponse->getBody()->getContents(), true);
+        $cURLConnection = curl_init();
+        curl_setopt($cURLConnection, CURLOPT_URL, $endpoint);
+        curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($cURLConnection);
+        $response = json_decode($response, true);
+        curl_close($cURLConnection);
 
         if ($errorMessage = $this->searchForError($response)) {
             throw new Exception($errorMessage);
@@ -47,17 +37,18 @@ class HttpClient
     /**
      * Do POST request
      *
-     * @throws GuzzleException
      * @throws Exception
      */
     public function post(string $endpoint, array $params)
     {
-        $options = [
-            'headers' => ['Content-Type' => 'application/json'],
-            'body' => json_encode($params)
-        ];
-        $rawResponse = $this->httpClient->request('POST', $endpoint, $options);
-        $response = json_decode($rawResponse->getBody()->getContents(), true);
+        $cURLConnection = curl_init($endpoint);
+        curl_setopt($cURLConnection, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, json_encode($params));
+        curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($cURLConnection);
+        $response = json_decode($response, true);
+        curl_close($cURLConnection);
 
         if ($errorMessage = $this->searchForError($response)) {
             throw new Exception($errorMessage);
