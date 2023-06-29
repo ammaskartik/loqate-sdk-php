@@ -11,6 +11,11 @@ use Throwable;
  */
 class Verify
 {
+    const VALID = 'Valid';
+    const INVALID = 'Invalid';
+    const VALID_CATCH_ALL = 'Valid_CatchAll';
+    const ACCEPT_VALID_CATCH_ALL = 'AcceptValidCatchAll';
+
     /** @var string ApiKey */
     private $apiKey;
 
@@ -67,7 +72,11 @@ class Verify
             $response = $this->httpClient->get($endpoint, $params);
 
             if (isset($response['Items']) && $item = reset($response['Items'])) {
-                return $item['ResponseCode'] === 'Valid';
+                if (isset($params[self::ACCEPT_VALID_CATCH_ALL])) {
+                    return $item['ResponseCode'] === self::VALID_CATCH_ALL || $item['ResponseCode'] === self::VALID;
+                }
+
+                return $item['ResponseCode'] === self::VALID;
             }
         } catch (Throwable $exception) {
             return ['error' => true, 'message' => $exception->getMessage()];
