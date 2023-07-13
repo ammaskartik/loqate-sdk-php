@@ -17,7 +17,8 @@ class API
         'capture_geolocation' => '/Capture/Interactive/GeoLocation/v1.00/json3.ws',
         'address_verify' => '/Cleansing/International/Batch/v1.00/json4.ws',
         'email_verification' => '/EmailValidation/Interactive/Validate/v2.00/json3.ws',
-        'phone_verification' => '/PhoneNumberValidation/Interactive/Validate/v2.20/json3.ws'
+        'phone_verification' => '/PhoneNumberValidation/Interactive/Validate/v2.20/json3.ws',
+        'extras_ip2country' => '/Extras/Web/Ip2Country/v1.1/json3.ws'
     ];
 
     /**
