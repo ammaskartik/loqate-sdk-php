@@ -62,7 +62,6 @@ class Extras
     {
         $params['Key'] = $this->apiKey;
         $endpoint = API::getEndpoint('extras_ip2country');
-        $response = $this->httpClient->get($endpoint, $params);
 
         try {
             $response = $this->httpClient->get($endpoint, $params);
