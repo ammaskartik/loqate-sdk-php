@@ -38,25 +38,10 @@ class Capture
     {
         $params['Key'] = $this->apiKey;
         $endpoint = API::getEndpoint('capture_find');
-
         try {
             $response = $this->httpClient->get($endpoint, $params);
-
             if (isset($response['Items']) && $items = $response['Items']) {
-                $result = [];
-                foreach ($items as $item) {
-                    if ($item['Type'] === 'Container') {
-                        $params['Container'] = $item['Id'];
-                        $containerResponse = $this->httpClient->get($endpoint, $params);
-                        if (isset($containerResponse['Items']) && $containerItems = $containerResponse['Items']) {
-                            $result = array_merge($result, $containerItems);
-                        }
-                    } else {
-                        $result[] = $item;
-                    }
-                }
-
-                return $result;
+                return $items;
             }
         } catch (Throwable $exception) {
             return ['error' => true, 'message' => $exception->getMessage()];
